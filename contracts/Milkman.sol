@@ -60,6 +60,7 @@ contract Milkman {
     /// @param to Who should receive the tokens.
     /// @param priceChecker A contract that verifies an order (mainly its minOut and fee) before Milkman signs it.
     /// @param priceCheckerData Data that gets passed to the price checker.
+    /// @return orderContract The address of the order contract that was created to execute the swap.
     function requestSwapExactTokensForTokens(
         uint256 amountIn,
         IERC20 fromToken,
@@ -67,11 +68,11 @@ contract Milkman {
         address to,
         address priceChecker,
         bytes calldata priceCheckerData
-    ) external {
+    ) external returns (address orderContract) {
         require(address(this) == ROOT_MILKMAN, "!root_milkman"); // can't call `requestSwapExactTokensForTokens` from order contracts
         require(priceChecker != address(0), "!price_checker"); // need to supply a valid price checker
 
-        address orderContract = createOrderContract();
+        orderContract = createOrderContract();
 
         fromToken.safeTransferFrom(msg.sender, orderContract, amountIn);
 

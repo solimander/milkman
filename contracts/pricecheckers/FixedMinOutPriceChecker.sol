@@ -14,7 +14,7 @@ contract FixedMinOutPriceChecker is IPriceChecker {
         uint256 _out,
         bytes calldata _data
     ) external view override returns (bool) {
-        (uint256 minOut) = abi.decode(_data, (uint256));
+        uint256 minOut = abi.decode(_data, (uint256));
         return minOut <= _out;
     }
 }
